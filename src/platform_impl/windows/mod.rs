@@ -2,6 +2,9 @@
 
 use winapi;
 use winapi::shared::windef::HWND;
+use winapi::shared::minwindef::{UINT, WPARAM, LPARAM};
+
+use std::fmt;
 
 pub use self::event_loop::{EventLoop, EventLoopWindowTarget, EventLoopProxy};
 pub use self::monitor::MonitorHandle;
@@ -62,6 +65,19 @@ impl WindowId {
         use std::ptr::null_mut;
 
         WindowId(null_mut())
+    }
+}
+
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct OsSpecificWindowEvent {
+    pub(crate) message: UINT,
+    pub(crate) wparam: WPARAM,
+    pub(crate) lparam: LPARAM,
+}
+
+impl fmt::Debug for OsSpecificWindowEvent {
+    fn fmt(&self, fmtr: &mut fmt::Formatter) -> fmt::Result {
+        fmtr.pad("OsSpecificWindowEvent { .. }")
     }
 }
 

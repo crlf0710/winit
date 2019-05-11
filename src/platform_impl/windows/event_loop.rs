@@ -1403,6 +1403,22 @@ unsafe extern "system" fn public_window_callback<T>(
 
             0
         },
+        winuser::WM_COMMAND | winuser::WM_NOTIFY => {
+            use event;
+            use event::WindowEvent::OsSpecific;
+            use platform_impl::platform::OsSpecificWindowEvent;
+
+            subclass_input.send_event(Event::WindowEvent {
+                window_id: RootWindowId(WindowId(window)),
+                event: OsSpecific(event::OsSpecificWindowEvent(OsSpecificWindowEvent {
+                    message: msg,
+                    wparam,
+                    lparam
+                })),
+            });
+
+            commctrl::DefSubclassProc(window, msg, wparam, lparam)
+        },
 
         // Only sent on Windows 8.1 or newer. On Windows 7 and older user has to log out to change
         // DPI, therefore all applications are closed while DPI is changing.

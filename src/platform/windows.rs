@@ -5,6 +5,7 @@ use std::os::raw::c_void;
 use libc;
 use winapi::shared::windef::HWND;
 
+use event::OsSpecificWindowEvent;
 use event::DeviceId;
 use monitor::MonitorHandle;
 use event_loop::EventLoop;
@@ -103,6 +104,36 @@ impl MonitorHandleExtWindows for MonitorHandle {
         self.inner.get_hmonitor() as *mut _
     }
 }
+
+/// Additional methods on `OsSpecificWindowEvent` that are specific to Windows.
+pub trait OsSpecificWindowEventExtWindows {
+    /// Returns the message specific to the Win32 API.
+    fn message(&self) -> u32;
+
+    /// Returns the message wparam specific to the Win32 API.
+    fn wparam(&self) -> usize;
+
+    /// Returns the message wparam specific to the Win32 API.
+    fn lparam(&self) -> isize;
+} 
+
+impl OsSpecificWindowEventExtWindows for OsSpecificWindowEvent {
+    #[inline]
+    fn message(&self) -> u32 {
+        self.0.message
+    }
+
+    #[inline]
+    fn wparam(&self) -> usize {
+        self.0.wparam
+    }
+
+    #[inline]
+    fn lparam(&self) -> isize {
+        self.0.lparam
+    }
+}
+
 
 /// Additional methods on `DeviceId` that are specific to Windows.
 pub trait DeviceIdExtWindows {

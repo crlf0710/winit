@@ -177,7 +177,14 @@ pub enum WindowEvent {
     ///
     /// For more information about DPI in general, see the [`dpi`](dpi/index.html) module.
     HiDpiFactorChanged(f64),
+
+    /// Subscribed OS specific message.
+    OsSpecific(OsSpecificWindowEvent),
 }
+
+
+#[derive(Debug, Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
+pub struct OsSpecificWindowEvent(pub(crate) platform_impl::OsSpecificWindowEvent);
 
 /// Identifier of an input device.
 ///
